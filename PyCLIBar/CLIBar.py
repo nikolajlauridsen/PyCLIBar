@@ -11,6 +11,10 @@ class CLIBar(Pacer):
         self.progress_char = progress_char
         self.fill_char = fill_char
 
+        # The widest bar returned, used to pad with spaces
+        # Otherwise it will look weird when printed with \r as line end
+        self.max_width = 0
+
     def start(self, _max=None):
         if _max:
             self.set_max(_max)
@@ -52,5 +56,25 @@ class CLIBar(Pacer):
         """
         return "{}/{}".format(self.progress, self.max)
 
-    def get_progress_bar(self):
-        return "{} {}".format(self.get_bar(), self.get_progress())
+    def get_progress_bar(self, bar=True, progress=True, est=True):
+        # String var to hold the bar
+        pbar = ""
+
+        if bar:
+            pbar += self.get_bar()
+            pbar += " "
+
+        if progress:
+            pbar += self.get_progress()
+            pbar += " "
+
+        if est:
+            pbar += "est. Remaining: {} s"\
+                .format(round(self.get_estimated_remaining()))
+
+        if len(pbar) > self.max_width:
+            self.max_width = len(pbar)
+        else:
+            pbar += " " * (self.max_width - len(pbar))
+
+        return pbar

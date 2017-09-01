@@ -51,3 +51,6 @@ class CLIBar(Pacer):
         Returns progress indicator I.e. 10/20
         """
         return "{}/{}".format(self.progress, self.max)
+
+    def get_progress_bar(self):
+        return "{} {}".format(self.get_bar(), self.get_progress())

@@ -14,8 +14,8 @@ bar.start(_max=steps)
 print('Taking 15 steps, 1 pr. 0.5 seconds.')
 
 for n in range(steps):
-    bar.step()
-    print("{} {}".format(bar.get_bar(), bar.get_progress()), end='\r')
+    print(bar.get_progress_bar(), end='\r')
     time.sleep(0.5)
+    bar.step()
 
 print('\nTest complete')

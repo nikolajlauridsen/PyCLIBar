@@ -11,8 +11,11 @@ class CLIBar(Pacer):
         self.progress_char = progress_char
         self.fill_char = fill_char
 
-    def reset(self):
-        super(CLIBar, self).reset()
+    def start(self, _max=None):
+        if _max:
+            self.set_max(_max)
+
+        super(CLIBar, self).start()
 
     def get_fraction(self):
         """
@@ -36,9 +39,15 @@ class CLIBar(Pacer):
         if not self.running:
             # If the pacer isn't running, we're going to assume it's because
             # max steps has been reached and the pacer has reset automatically
-            return "[{}]\n".format(self.progress_char*self.bar_length)
+            return "[{}]".format(self.progress_char*self.bar_length)
 
         # Remove 2 from bar length since we have [ and ]
         progress = int(self.bar_length * self.get_fraction())
         return "[{}{}]".format(self.progress_char * progress,
                                self.fill_char * (self.bar_length-progress))
+
+    def get_progress(self):
+        """
+        Returns progress indicator I.e. 10/20
+        """
+        return "{}/{}".format(self.progress, self.max)

@@ -3,10 +3,13 @@ from .pacer import Pacer
 
 class CLIBar(Pacer):
     def __init__(self, bar_width=20, progress_char='=', fill_char=' ',
-                 _max=0):
+                 _max=0, progress=True, est=True):
         super().__init__()
         self.max = _max
 
+        self.bar = bar_width >= 2
+        self.progress = progress
+        self.est = est
         self.bar_length = bar_width - 2
         self.progress_char = progress_char
         self.fill_char = fill_char
@@ -56,23 +59,23 @@ class CLIBar(Pacer):
         """
         return "{}/{}".format(self.progress, self.max)
 
-    def get_progress_bar(self, bar=True, progress=True, est=True):
+    def get_progress_bar(self):
         # String var to hold the bar
         pbar = ""
 
-        if bar:
+        if self.bar:
             pbar += self.get_bar()
             pbar += " "
 
-        if progress:
+        if self.progress:
             pbar += self.get_progress()
             pbar += " "
 
-        if est:
+        if self.est:
             pbar += "est. Remaining: {} s"\
                 .format(round(self.get_estimated_remaining()))
 
-        if len(pbar) > self.max_width:
+        if len(pbar) > self.max_width and self.bar:
             self.max_width = len(pbar)
         else:
             pbar += " " * (self.max_width - len(pbar))
